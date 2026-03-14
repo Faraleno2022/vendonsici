@@ -1,0 +1,254 @@
+{% extends 'boutique/admin/base_admin.html' %}
+
+{% block title %}Comptabilité{% endblock %}
+{% block nav_comptabilite %}bg-white/10 text-white{% endblock %}
+{% block mob_comptabilite %}text-luxe-gold bg-luxe-gold/10{% endblock %}
+
+{% block content %}
+<div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+        <h1 class="font-serif text-3xl font-bold text-luxe-dark">Comptabilité</h1>
+        <p class="text-gray-500 mt-1">Suivi des ventes, recettes et bénéfices</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <a href="{% url 'admin_stock_alerts' %}" class="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
+            <i data-lucide="alert-triangle" class="w-4 h-4 {% if nb_alertes_stock > 0 %}text-red-500{% else %}text-green-500{% endif %}"></i>
+            {% if nb_alertes_stock > 0 %}{{ nb_alertes_stock }} alerte{{ nb_alertes_stock|pluralize }}{% else %}Stock OK{% endif %}
+        </a>
+        <a href="{% url 'admin_offline_sale_add' %}" class="inline-flex items-center gap-2 bg-luxe-gold text-luxe-dark px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-luxe-gold-light transition-colors">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Vente hors site
+        </a>
+    </div>
+</div>
+
+<!-- Filtre par période -->
+<div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-8">
+    <div class="flex flex-wrap items-center gap-2">
+        <span class="text-sm text-gray-500 font-medium mr-2"><i data-lucide="calendar" class="w-4 h-4 inline"></i> Période :</span>
+        <a href="?periode=semaine" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {% if periode == 'semaine' %}bg-luxe-dark text-white{% else %}bg-gray-100 text-gray-600 hover:bg-gray-200{% endif %}">7 jours</a>
+        <a href="?periode=mois" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {% if periode == 'mois' %}bg-luxe-dark text-white{% else %}bg-gray-100 text-gray-600 hover:bg-gray-200{% endif %}">30 jours</a>
+        <a href="?periode=trimestre" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {% if periode == 'trimestre' %}bg-luxe-dark text-white{% else %}bg-gray-100 text-gray-600 hover:bg-gray-200{% endif %}">3 mois</a>
+        <a href="?periode=annee" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {% if periode == 'annee' %}bg-luxe-dark text-white{% else %}bg-gray-100 text-gray-600 hover:bg-gray-200{% endif %}">1 an</a>
+    </div>
+</div>
+
+<!-- KPI Totaux -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+                <i data-lucide="shopping-cart" class="w-6 h-6 text-blue-500"></i>
+            </div>
+            <span class="text-xs font-semibold text-blue-500 bg-blue-50 px-2.5 py-1 rounded-full">Quantité</span>
+        </div>
+        <p class="font-serif text-3xl font-bold text-luxe-dark">{{ total_qte_vendus }}</p>
+        <p class="text-sm text-gray-500 mt-1">Articles vendus</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
+                <i data-lucide="banknote" class="w-6 h-6 text-green-500"></i>
+            </div>
+            <span class="text-xs font-semibold text-green-500 bg-green-50 px-2.5 py-1 rounded-full">Recette</span>
+        </div>
+        <p class="font-serif text-2xl font-bold text-luxe-dark">{{ total_recette }}</p>
+        <p class="text-sm text-gray-500 mt-1">Chiffre d'affaires total</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center">
+                <i data-lucide="receipt" class="w-6 h-6 text-amber-500"></i>
+            </div>
+            <span class="text-xs font-semibold text-amber-500 bg-amber-50 px-2.5 py-1 rounded-full">Coût</span>
+        </div>
+        <p class="font-serif text-2xl font-bold text-luxe-dark">{{ total_cout_achat }}</p>
+        <p class="text-sm text-gray-500 mt-1">Coût d'achat total</p>
+    </div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 {% if total_benefice_val >= 0 %}bg-emerald-50{% else %}bg-red-50{% endif %} rounded-xl flex items-center justify-center">
+                <i data-lucide="trending-up" class="w-6 h-6 {% if total_benefice_val >= 0 %}text-emerald-500{% else %}text-red-500{% endif %}"></i>
+            </div>
+            <span class="text-xs font-semibold {% if total_benefice_val >= 0 %}text-emerald-500 bg-emerald-50{% else %}text-red-500 bg-red-50{% endif %} px-2.5 py-1 rounded-full">Bénéfice</span>
+        </div>
+        <p class="font-serif text-2xl font-bold {% if total_benefice_val >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">{{ total_benefice }}</p>
+        <p class="text-sm text-gray-500 mt-1">Bénéfice net</p>
+    </div>
+</div>
+
+<!-- Détail : Site vs Hors Site -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+    <!-- Ventes sur le site -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center">
+                <i data-lucide="globe" class="w-5 h-5 text-indigo-500"></i>
+            </div>
+            <div>
+                <h3 class="font-serif text-lg font-bold text-luxe-dark">Ventes sur le site</h3>
+                <p class="text-xs text-gray-400">Commandes terminées sur la marketplace</p>
+            </div>
+        </div>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                <span class="text-sm text-gray-500">Quantité vendue</span>
+                <span class="text-sm font-semibold text-luxe-dark">{{ ventes_site_qte }}</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                <span class="text-sm text-gray-500">Recette</span>
+                <span class="text-sm font-semibold text-green-600">{{ ventes_site_recette }}</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                <span class="text-sm text-gray-500">Coût d'achat</span>
+                <span class="text-sm font-semibold text-amber-600">{{ cout_achat_site }}</span>
+            </div>
+            <div class="flex justify-between items-center py-2">
+                <span class="text-sm font-medium text-gray-700">Bénéfice</span>
+                <span class="text-sm font-bold {% if benefice_site_val >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">{{ benefice_site }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ventes hors site -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+                    <i data-lucide="store" class="w-5 h-5 text-orange-500"></i>
+                </div>
+                <div>
+                    <h3 class="font-serif text-lg font-bold text-luxe-dark">Ventes hors site</h3>
+                    <p class="text-xs text-gray-400">Boutique physique, WhatsApp, etc.</p>
+                </div>
+            </div>
+            <a href="{% url 'admin_offline_sales' %}" class="text-xs text-luxe-gold hover:underline font-medium">Voir tout →</a>
+        </div>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                <span class="text-sm text-gray-500">Quantité vendue</span>
+                <span class="text-sm font-semibold text-luxe-dark">{{ ventes_hors_site_qte }}</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                <span class="text-sm text-gray-500">Recette</span>
+                <span class="text-sm font-semibold text-green-600">{{ ventes_hors_site_recette }}</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                <span class="text-sm text-gray-500">Coût d'achat</span>
+                <span class="text-sm font-semibold text-amber-600">{{ cout_achat_hors_site }}</span>
+            </div>
+            <div class="flex justify-between items-center py-2">
+                <span class="text-sm font-medium text-gray-700">Bénéfice</span>
+                <span class="text-sm font-bold {% if benefice_hors_site_val >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">{{ benefice_hors_site }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alertes stock -->
+{% if nb_alertes_stock > 0 %}
+<div class="bg-red-50 border border-red-200 rounded-2xl p-6 mb-10">
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-red-500"></i>
+            </div>
+            <div>
+                <h3 class="font-serif text-lg font-bold text-red-800">Alertes de stock</h3>
+                <p class="text-xs text-red-500">{{ nb_alertes_stock }} produit{{ nb_alertes_stock|pluralize }} en stock bas</p>
+            </div>
+        </div>
+        <a href="{% url 'admin_stock_alerts' %}" class="text-xs bg-red-100 text-red-700 px-3 py-1.5 rounded-lg font-medium hover:bg-red-200 transition-colors">Gérer →</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {% for p in produits_stock_bas|slice:":6" %}
+        <div class="bg-white rounded-xl p-3 flex items-center justify-between border border-red-100">
+            <div class="min-w-0">
+                <p class="text-sm font-medium text-gray-800 truncate">{{ p.nom }}</p>
+                <p class="text-xs text-gray-400">Seuil : {{ p.seuil_alerte_stock }}</p>
+            </div>
+            <span class="text-sm font-bold {% if p.stock == 0 %}text-red-600{% else %}text-amber-600{% endif %} bg-red-50 px-2.5 py-1 rounded-lg whitespace-nowrap ml-2">
+                {{ p.stock }} restant{{ p.stock|pluralize }}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Top produits vendus -->
+{% if top_produits %}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-10 overflow-hidden">
+    <div class="p-6 border-b border-gray-100">
+        <h3 class="font-serif text-lg font-bold text-luxe-dark flex items-center gap-2">
+            <i data-lucide="trophy" class="w-5 h-5 text-luxe-gold"></i>
+            Top produits vendus (site)
+        </h3>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                <tr>
+                    <th class="text-left px-6 py-3">#</th>
+                    <th class="text-left px-6 py-3">Produit</th>
+                    <th class="text-right px-6 py-3">Qté vendue</th>
+                    <th class="text-right px-6 py-3">Chiffre d'affaires</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                {% for p in top_produits %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-3 text-sm text-gray-400">{{ forloop.counter }}</td>
+                    <td class="px-6 py-3 text-sm font-medium text-gray-800">{{ p.nom_produit }}</td>
+                    <td class="px-6 py-3 text-sm text-right font-semibold text-luxe-dark">{{ p.qte_vendue }}</td>
+                    <td class="px-6 py-3 text-sm text-right font-semibold text-green-600">{{ p.ca|floatformat:"0" }} GNF</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Dernières ventes hors site -->
+{% if dernieres_offline %}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+        <h3 class="font-serif text-lg font-bold text-luxe-dark flex items-center gap-2">
+            <i data-lucide="store" class="w-5 h-5 text-orange-500"></i>
+            Dernières ventes hors site
+        </h3>
+        <a href="{% url 'admin_offline_sales' %}" class="text-xs text-luxe-gold hover:underline font-medium">Voir tout →</a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                <tr>
+                    <th class="text-left px-6 py-3">Produit</th>
+                    <th class="text-right px-6 py-3">Qté</th>
+                    <th class="text-right px-6 py-3">Montant</th>
+                    <th class="text-right px-6 py-3">Bénéfice</th>
+                    <th class="text-left px-6 py-3">Client</th>
+                    <th class="text-left px-6 py-3">Date</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                {% for s in dernieres_offline %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-3 text-sm font-medium text-gray-800">{{ s.nom_produit }}</td>
+                    <td class="px-6 py-3 text-sm text-right text-luxe-dark">{{ s.quantite }}</td>
+                    <td class="px-6 py-3 text-sm text-right font-semibold text-green-600">{{ s.total_formate }}</td>
+                    <td class="px-6 py-3 text-sm text-right font-semibold {% if s.benefice >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">{{ s.benefice_formate }}</td>
+                    <td class="px-6 py-3 text-sm text-gray-500">{{ s.client_nom|default:"—" }}</td>
+                    <td class="px-6 py-3 text-sm text-gray-400">{{ s.date_vente|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

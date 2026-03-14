@@ -1,0 +1,86 @@
+{% extends 'boutique/admin/base_admin.html' %}
+
+{% block title %}Ventes hors site{% endblock %}
+{% block nav_comptabilite %}bg-white/10 text-white{% endblock %}
+{% block mob_comptabilite %}text-luxe-gold bg-luxe-gold/10{% endblock %}
+
+{% block content %}
+<div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+        <h1 class="font-serif text-3xl font-bold text-luxe-dark">Ventes hors site</h1>
+        <p class="text-gray-500 mt-1">Ventes effectuées en dehors de la marketplace</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <a href="{% url 'admin_comptabilite' %}" class="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            Comptabilité
+        </a>
+        <a href="{% url 'admin_offline_sale_add' %}" class="inline-flex items-center gap-2 bg-luxe-gold text-luxe-dark px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-luxe-gold-light transition-colors">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Nouvelle vente
+        </a>
+    </div>
+</div>
+
+{% if sales %}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                <tr>
+                    <th class="text-left px-6 py-3">Produit</th>
+                    <th class="text-right px-6 py-3">Qté</th>
+                    <th class="text-right px-6 py-3">Prix vente</th>
+                    <th class="text-right px-6 py-3">Prix achat</th>
+                    <th class="text-right px-6 py-3">Total</th>
+                    <th class="text-right px-6 py-3">Bénéfice</th>
+                    <th class="text-left px-6 py-3">Client</th>
+                    <th class="text-left px-6 py-3">Date</th>
+                    <th class="text-center px-6 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                {% for sale in sales %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4">
+                        <p class="text-sm font-medium text-gray-800">{{ sale.nom_produit }}</p>
+                        {% if sale.notes %}<p class="text-xs text-gray-400 mt-0.5">{{ sale.notes|truncatewords:8 }}</p>{% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-right font-semibold text-luxe-dark">{{ sale.quantite }}</td>
+                    <td class="px-6 py-4 text-sm text-right text-gray-600">{{ sale.prix_vente|floatformat:"0" }} GNF</td>
+                    <td class="px-6 py-4 text-sm text-right text-gray-400">{{ sale.prix_achat|floatformat:"0" }} GNF</td>
+                    <td class="px-6 py-4 text-sm text-right font-semibold text-green-600">{{ sale.total_formate }}</td>
+                    <td class="px-6 py-4 text-sm text-right font-semibold {% if sale.benefice >= 0 %}text-emerald-600{% else %}text-red-600{% endif %}">{{ sale.benefice_formate }}</td>
+                    <td class="px-6 py-4">
+                        <p class="text-sm text-gray-700">{{ sale.client_nom|default:"—" }}</p>
+                        {% if sale.client_telephone %}<p class="text-xs text-gray-400">{{ sale.client_telephone }}</p>{% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-400">{{ sale.date_vente|date:"d/m/Y H:i" }}</td>
+                    <td class="px-6 py-4 text-center">
+                        <form method="POST" action="{% url 'admin_offline_sale_delete' sale.pk %}" onsubmit="return confirm('Supprimer cette vente ?')">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-400 hover:text-red-600 transition-colors" title="Supprimer">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
+    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="store" class="w-8 h-8 text-gray-400"></i>
+    </div>
+    <h3 class="font-serif text-xl font-bold text-gray-700 mb-2">Aucune vente hors site</h3>
+    <p class="text-gray-400 text-sm mb-6">Enregistrez vos ventes effectuées en dehors de la marketplace.</p>
+    <a href="{% url 'admin_offline_sale_add' %}" class="inline-flex items-center gap-2 bg-luxe-gold text-luxe-dark px-6 py-3 rounded-xl text-sm font-semibold hover:bg-luxe-gold-light transition-colors">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        Enregistrer une vente
+    </a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'boutique/admin/base_admin.html' %}
+
+{% block title %}Enregistrer une vente hors site{% endblock %}
+{% block nav_comptabilite %}bg-white/10 text-white{% endblock %}
+{% block mob_comptabilite %}text-luxe-gold bg-luxe-gold/10{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <a href="{% url 'admin_offline_sales' %}" class="text-sm text-gray-500 hover:text-luxe-gold flex items-center gap-1 mb-4 transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        Retour aux ventes hors site
+    </a>
+    <h1 class="font-serif text-3xl font-bold text-luxe-dark">Enregistrer une vente hors site</h1>
+    <p class="text-gray-500 mt-1">Saisissez les détails de la vente effectuée en dehors de la marketplace</p>
+</div>
+
+<div class="max-w-2xl">
+    <form method="POST" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 space-y-6">
+        {% csrf_token %}
+
+        <!-- Sélection du produit -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Produit du catalogue <span class="text-gray-400">(optionnel)</span></label>
+            <select name="product" id="product-select"
+                class="w-full border border-gray-200 rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-luxe-gold/30 focus:border-luxe-gold outline-none transition-all">
+                <option value="">— Produit non référencé —</option>
+                {% for p in products %}
+                <option value="{{ p.pk }}"
+                    data-nom="{{ p.nom }}"
+                    data-prix="{{ p.prix }}"
+                    data-prix-achat="{{ p.prix_achat }}"
+                    data-stock="{{ p.stock }}"
+                    {% if form_data.product == p.pk|stringformat:"d" %}selected{% endif %}>
+                    {{ p.nom }} — {{ p.prix_formate }} (stock: {{ p.stock }})
+                </option>
+                {% endfor %}
+            </select>
+            <p class="text-xs text-gray-400 mt-1">Sélectionnez un produit pour pré-remplir les champs et décrémenter le stock automatiquement.</p>
+        </div>
+
+        <!-- Nom du produit -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Nom du produit <span class="text-red-400">*</span></label>
+            <input type="text" name="nom_produit" id="nom-produit"
+                value="{{ form_data.nom_produit|default:'' }}"
+                class="w-full border border-gray-200 rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-luxe-gold/30 focus:border-luxe-gold outline-none transition-all"
+                placeholder="Ex: Sac en cuir artisanal">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <!-- Quantité -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Quantité <span class="text-red-400">*</span></label>
+                <input type="number" name="quantite" min="1" value="{{ form_data.quantite|default:'1' }}"
+                    class="w-full border border-gray-200 rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-luxe-gold/30 focus:border-luxe-gold outline-none transition-all">
+            </div>
+
+            <!-- Prix de vente -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Prix de vente (GNF) <span class="text-red-400">*</span></label>
+                <input type="number" name="prix_vente" id="prix-vente" min="0"
+                    value="{{ form_data.prix_vente|default:'' }}"
+                    class="w-full border border-gray-200 rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-luxe-gold/30 focus:border-luxe-gold outline-none transition-all"
+                    placeholder="0">
+            </div>
+
+            <!-- Prix d'achat -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Prix d'achat (GNF)</label>
+                <input type="number" name="prix_achat" id="prix-achat" min="0"
+                    value="{{ form_data.prix_achat|default:'' }}"
+                    class="w-full border border-gray-200 rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-luxe-gold/30 focus:border-luxe-gold outline-none transition-all"
+                    placeholder="0">
+            </div>
+        </div>
+
+        <!-- Client -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nom du client</label>
+                <input type="text" name="client_nom" value="{{ form_data.client_nom|default:'' }}"
+                    class="w-full border border-gray-200 rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-luxe-gold/30 focus:border-luxe-gold outline-none transition-all"
+                    placeholder="Ex: Mamadou Diallo">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone du client</label>
+                <input type="tel" name="client_telephone" value="{{ form_data.client_telephone|default:'' }}"
+                    class="w-full border border-gray-200 rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-luxe-gold/30 focus:border-luxe-gold outline-none transition-all"
+                    placeholder="+224 6XX XX XX XX">
+            </div>
+        </div>
+
+        <!-- Notes -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+            <textarea name="notes" rows="2"
+                class="w-full border border-gray-200 rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-luxe-gold/30 focus:border-luxe-gold outline-none transition-all resize-none"
+                placeholder="Informations supplémentaires...">{{ form_data.notes|default:'' }}</textarea>
+        </div>
+
+        <div class="flex items-center gap-3 pt-2">
+            <button type="submit" class="bg-luxe-gold text-luxe-dark px-8 py-3.5 rounded-xl font-semibold hover:bg-luxe-gold-light transition-colors flex items-center gap-2">
+                <i data-lucide="check" class="w-5 h-5"></i>
+                Enregistrer la vente
+            </button>
+            <a href="{% url 'admin_offline_sales' %}" class="text-gray-500 hover:text-gray-700 px-4 py-3.5 text-sm font-medium transition-colors">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('product-select').addEventListener('change', function() {
+    const opt = this.options[this.selectedIndex];
+    if (this.value) {
+        document.getElementById('nom-produit').value = opt.dataset.nom || '';
+        document.getElementById('prix-vente').value = opt.dataset.prix || '';
+        document.getElementById('prix-achat').value = opt.dataset.prixAchat || '';
+    }
+});
+</script>
+{% endblock %}

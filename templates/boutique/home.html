@@ -1,0 +1,215 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Africa Mindset — Marketplace multi-vendeurs{% endblock %}
+
+{% block content %}
+<!-- Hero Image -->
+<section>
+    <img src="{% static 'images/home.jpg' %}" alt="Africa Mindset" class="w-full h-auto object-cover">
+</section>
+
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8 grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="lg:col-span-2">
+            <p class="text-luxe-gold text-sm uppercase tracking-[0.3em] font-semibold mb-2">Marketplace Guinée</p>
+            <h1 class="font-serif text-3xl md:text-4xl font-bold text-luxe-dark mb-3">Une boutique e-commerce multi-vendeurs pour toute la Guinée</h1>
+            <p class="text-gray-500">Les vendeurs peuvent publier leurs produits par catégorie et chaque commande reste liée au vendeur qui a publié l'article : agricole, fruits, électronique, artisanat, mode et plus.</p>
+        </div>
+        <div class="bg-gray-50 rounded-2xl p-5">
+            <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-2">Produits actifs</p>
+            <p class="font-serif text-3xl font-bold text-luxe-dark">{{ total_products }}</p>
+        </div>
+        <div class="bg-gray-50 rounded-2xl p-5">
+            <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-2">Vendeurs disponibles</p>
+            <p class="font-serif text-3xl font-bold text-luxe-dark">{{ vendors|length }}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Collection Section -->
+<section id="collection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <!-- Section Header -->
+    <div class="text-center mb-12">
+        <p class="text-luxe-gold text-sm uppercase tracking-[0.3em] font-semibold mb-2">Catalogue national</p>
+        <h2 class="font-serif text-4xl md:text-5xl font-bold text-luxe-dark mb-4">Les produits des vendeurs d'Afrique</h2>
+        <p class="text-gray-500 max-w-2xl mx-auto">Parcourez les offres publiées par plusieurs vendeurs, filtrez par catégorie ou vendeur, puis commandez en toute simplicité.</p>
+    </div>
+
+    <!-- Search Results Info -->
+    {% if search_query %}
+    <div class="mb-8 flex items-center justify-between bg-white rounded-xl px-6 py-4 shadow-sm">
+        <p class="text-sm text-gray-600">
+            <span class="font-semibold">{{ products|length }}</span> résultat(s) pour "<span class="font-semibold text-luxe-dark">{{ search_query }}</span>"
+        </p>
+        <a href="{% url 'home' %}" class="text-sm text-luxe-gold hover:underline flex items-center gap-1">
+            <i data-lucide="x" class="w-4 h-4"></i> Réinitialiser
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Category Filters -->
+    <div class="flex flex-wrap justify-center gap-3 mb-12">
+        {% for key, label in categories %}
+        <a href="{% url 'home' %}?categorie={{ key }}{% if search_query %}&q={{ search_query }}{% endif %}{% if vendeur_actif %}&vendeur={{ vendeur_actif }}{% endif %}{% if type_vente_actif and type_vente_actif != 'tout' %}&type_vente={{ type_vente_actif }}{% endif %}#collection"
+           class="px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300
+           {% if categorie_active == key %}
+               bg-luxe-dark text-white shadow-lg shadow-luxe-dark/20
+           {% else %}
+               bg-white text-gray-600 hover:bg-luxe-dark hover:text-white shadow-sm
+           {% endif %}">
+            {{ label }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-3 mb-12">
+        {% for key, label in type_vente_filters %}
+        <a href="{% url 'home' %}?categorie={{ categorie_active }}{% if search_query %}&q={{ search_query }}{% endif %}{% if vendeur_actif %}&vendeur={{ vendeur_actif }}{% endif %}{% if key != 'tout' %}&type_vente={{ key }}{% endif %}#collection"
+           class="px-5 py-2 rounded-full text-sm font-medium transition-all {% if type_vente_actif == key %}bg-luxe-gold text-white{% else %}bg-white text-gray-600 hover:bg-luxe-dark hover:text-white{% endif %}">
+            {{ label }}
+        </a>
+        {% endfor %}
+    </div>
+
+    {% if vendors %}
+    <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <a href="{% url 'home' %}?categorie={{ categorie_active }}{% if search_query %}&q={{ search_query }}{% endif %}{% if type_vente_actif and type_vente_actif != 'tout' %}&type_vente={{ type_vente_actif }}{% endif %}#collection"
+           class="px-5 py-2 rounded-full text-sm font-medium transition-all {% if not vendeur_actif %}bg-luxe-gold text-white{% else %}bg-white text-gray-600 hover:bg-luxe-dark hover:text-white{% endif %}">
+            Tous les vendeurs
+        </a>
+        {% for vendor in vendors %}
+        <a href="{% url 'home' %}?categorie={{ categorie_active }}&vendeur={{ vendor.slug }}{% if search_query %}&q={{ search_query }}{% endif %}{% if type_vente_actif and type_vente_actif != 'tout' %}&type_vente={{ type_vente_actif }}{% endif %}#collection"
+           class="px-5 py-2 rounded-full text-sm font-medium transition-all {% if vendeur_actif == vendor.slug %}bg-luxe-gold text-white{% else %}bg-white text-gray-600 hover:bg-luxe-dark hover:text-white{% endif %}">
+            {{ vendor.nom }}
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Products Grid -->
+    {% if products %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for product in products %}
+        <div class="cascade-item product-card bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group"
+             style="animation-delay: 0s;">
+            <!-- Product Image -->
+            <a href="{% url 'product_detail' product.pk %}" class="block relative overflow-hidden" style="aspect-ratio: 4/3;">
+                <img src="{{ product.get_image_url }}" alt="{{ product.nom }}"
+                     class="w-full h-full object-cover transition-transform duration-700"
+                     loading="lazy">
+
+                <!-- Badge -->
+                {% if product.badge %}
+                <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-white text-xs font-semibold
+                    badge-{{ product.badge|lower }}">
+                    {{ product.badge }}
+                </span>
+                {% endif %}
+
+                <span class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold shadow-sm {% if product.type_vente == 'grossiste' %}bg-luxe-dark text-white{% else %}bg-white/95 text-luxe-dark border border-gray-200{% endif %}">
+                    {{ product.get_type_vente_display }}
+                </span>
+
+                <!-- Hover Overlay -->
+                <div class="product-overlay absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300 flex items-center justify-center gap-3">
+                    <button type="button"
+                            data-add-to-cart="{{ product.pk }}"
+                            class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-luxe-dark hover:bg-luxe-gold hover:text-white transition-all transform hover:scale-110"
+                            title="Ajouter au panier">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    </button>
+                    <button type="button"
+                            data-share-name="{{ product.nom|escapejs }}"
+                            data-share-price="{{ product.prix_formate|escapejs }}"
+                            data-url="{% url 'product_detail' product.pk %}"
+                            class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-luxe-dark hover:bg-green-500 hover:text-white transition-all transform hover:scale-110"
+                            title="Partager sur WhatsApp">
+                        <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </a>
+            <div class="px-5 pt-3">
+                <p class="text-xs text-gray-400 flex items-center gap-1">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                    {{ product.lieu_stock }}
+                </p>
+            </div>
+
+            <!-- Product Info -->
+            <div class="p-5">
+                <p class="text-xs text-luxe-gold uppercase tracking-wider font-semibold mb-1">{{ product.get_categorie_display }}</p>
+                <a href="{% url 'product_detail' product.pk %}">
+                    <h3 class="font-serif text-lg font-bold text-luxe-dark mb-2 group-hover:text-luxe-gold transition-colors line-clamp-1">{{ product.nom }}</h3>
+                </a>
+                <p class="text-sm text-gray-500 mb-2">Vendu par {{ product.vendeur.nom }}</p>
+
+                <!-- Stars -->
+                <div class="flex items-center gap-0.5 mb-3">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= product.note %}
+                        <svg class="w-3.5 h-3.5 star-filled" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        {% else %}
+                        <svg class="w-3.5 h-3.5 star-empty" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <p class="font-semibold text-luxe-dark">{{ product.prix_formate }}</p>
+                    <button type="button"
+                            data-add-to-cart="{{ product.pk }}"
+                            class="text-xs bg-luxe-dark text-white px-4 py-2 rounded-full hover:bg-luxe-gold transition-colors duration-300">
+                        + Panier
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20">
+        <i data-lucide="search-x" class="w-16 h-16 text-gray-300 mx-auto mb-4"></i>
+        <h3 class="font-serif text-2xl font-bold text-gray-400 mb-2">Aucun produit trouvé</h3>
+        <p class="text-gray-400 mb-6">Essayez avec d'autres mots-clés ou explorez nos catégories.</p>
+        <a href="{% url 'home' %}" class="inline-flex items-center gap-2 bg-luxe-dark text-white px-6 py-3 rounded-full hover:bg-luxe-gold transition-colors">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Voir tous les produits
+        </a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Cascade animation with intersection observer
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationDelay = `${index * 0.1}s`;
+                entry.target.classList.add('cascade-item');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
+
+    document.querySelectorAll('[data-add-to-cart]').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            addToCartAjax(button.dataset.addToCart);
+        });
+    });
+
+    document.querySelectorAll('[data-share-name]').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            shareWhatsApp(button.dataset.shareName, button.dataset.sharePrice, window.location.origin + button.dataset.url);
+        });
+    });
+
+    // Re-initialize lucide icons after page load
+    lucide.createIcons();
+</script>
+{% endblock %}
