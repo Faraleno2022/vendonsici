@@ -64,7 +64,7 @@
         <div class="flex flex-col justify-center">
             <p class="text-luxe-gold text-sm uppercase tracking-[0.3em] font-semibold mb-3">{{ product.get_categorie_display }}</p>
             <div class="flex flex-wrap items-center gap-3 mb-4">
-                <h1 class="font-serif text-4xl md:text-5xl font-bold text-luxe-dark">{{ product.nom }}</h1>
+                <h1 class="font-serif text-2xl sm:text-4xl md:text-5xl font-bold text-luxe-dark">{{ product.nom }}</h1>
                 <span class="px-4 py-1.5 rounded-full text-sm font-semibold shadow-sm {% if product.type_vente == 'grossiste' %}bg-luxe-dark text-white{% else %}bg-white text-luxe-dark border border-gray-200{% endif %}">
                     {{ product.get_type_vente_display }}
                 </span>
@@ -86,7 +86,7 @@
 
             <!-- Price -->
             <div class="mb-8">
-                <p class="font-serif text-4xl font-bold text-luxe-gold">{{ product.prix_formate }}</p>
+                <p class="font-serif text-2xl sm:text-4xl font-bold text-luxe-gold">{{ product.prix_formate }}</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">

@@ -52,6 +52,7 @@ class Product(models.Model):
         ('maison', 'Maison et décoration'),
         ('beaute', 'Beauté et bien-être'),
         ('artisanat', 'Artisanat local'),
+        ('restaurant', 'Restaurant'),
         ('services', 'Services et autres'),
     ]
     BADGE_CHOICES = [

@@ -111,7 +111,7 @@
                     <i data-lucide="shopping-bag" class="w-5 h-5 text-luxe-gold"></i> Récapitulatif
                 </h3>
 
-                <div class="flex items-center justify-between py-3 border-b border-gray-100">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 border-b border-gray-100">
                     <div class="flex items-center gap-3">
                         <img src="{{ product.get_image_url }}" alt="{{ product.nom }}" class="w-12 h-12 rounded-lg object-cover">
                         <div>
@@ -201,7 +201,7 @@
         </form>
 
         <!-- Trust badges -->
-        <div class="flex items-center justify-center gap-6 mt-6 text-xs text-gray-400">
+        <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-6 text-xs text-gray-400">
             <span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Sécurisé</span>
             <span class="flex items-center gap-1"><i data-lucide="truck" class="w-3.5 h-3.5"></i> Livraison selon vendeur</span>
             <span class="flex items-center gap-1"><i data-lucide="headphones" class="w-3.5 h-3.5"></i> Support WhatsApp</span>

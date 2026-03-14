@@ -84,7 +84,10 @@
         .toast {
             position: fixed;
             top: 100px;
-            right: 20px;
+            right: 16px;
+            left: 16px;
+            max-width: 420px;
+            margin-left: auto;
             z-index: 9999;
             animation: slideInRight 0.4s ease-out, fadeOut 0.4s ease-in 2.6s forwards;
         }
@@ -160,7 +163,7 @@
 
     {% block navbar %}
     <!-- Navbar -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-gray-200 shadow-sm border-b border-gray-300" id="navbar">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-luxe-dark shadow-lg border-b border-white/10" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
 
@@ -168,18 +171,18 @@
                 <a href="{% url 'home' %}" class="flex items-center gap-2 group">
                     <img src="{% static 'images/logo.png' %}" alt="Africa Mindset" class="h-14 w-auto rounded-full bg-white p-1">
                     <div class="hidden lg:block">
-                        <p class="font-serif text-2xl font-bold text-luxe-dark leading-none">Africa Mindset</p>
-                        <p class="text-[11px] uppercase tracking-[0.25em] text-gray-500 mt-1">Marketplace multi-vendeurs</p>
+                        <p class="font-serif text-2xl font-bold text-white leading-none">Africa Mindset</p>
+                        <p class="text-[11px] uppercase tracking-[0.25em] text-white/50 mt-1">Marketplace multi-vendeurs</p>
                     </div>
                 </a>
 
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center gap-8">
-                    <a href="{% url 'home' %}" class="text-sm font-medium text-gray-700 hover:text-luxe-gold transition-colors">Accueil</a>
-                    <a href="{% url 'home' %}?categorie=tout#collection" class="text-sm font-medium text-gray-700 hover:text-luxe-gold transition-colors">Catalogue</a>
-                    <a href="{% url 'commander_en_ligne' %}" class="text-sm font-medium text-gray-700 hover:text-luxe-gold transition-colors">Commander</a>
-                    <a href="{% url 'about' %}" class="text-sm font-medium text-gray-700 hover:text-luxe-gold transition-colors">À Propos</a>
-                    <a href="{% url 'about' %}#contact" class="text-sm font-medium text-gray-700 hover:text-luxe-gold transition-colors">Contact</a>
+                    <a href="{% url 'home' %}" class="text-sm font-medium text-white/80 hover:text-luxe-gold transition-colors">Accueil</a>
+                    <a href="{% url 'home' %}?categorie=tout#collection" class="text-sm font-medium text-white/80 hover:text-luxe-gold transition-colors">Catalogue</a>
+                    <a href="{% url 'commander_en_ligne' %}" class="text-sm font-medium text-white/80 hover:text-luxe-gold transition-colors">Commander</a>
+                    <a href="{% url 'about' %}" class="text-sm font-medium text-white/80 hover:text-luxe-gold transition-colors">À Propos</a>
+                    <a href="{% url 'about' %}#contact" class="text-sm font-medium text-white/80 hover:text-luxe-gold transition-colors">Contact</a>
                 </div>
 
                 <!-- Search + Cart + Admin -->
@@ -190,15 +193,15 @@
                             <div class="relative">
                                 <input type="text" name="q" value="{{ search_query|default:'' }}"
                                     placeholder="Rechercher..."
-                                    class="w-0 focus:w-56 transition-all duration-300 bg-gray-100 rounded-full py-2 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-luxe-gold/30"
+                                    class="w-0 focus:w-56 transition-all duration-300 bg-white/10 text-white placeholder-white/50 rounded-full py-2 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-luxe-gold/30"
                                     id="searchInput">
-                                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer" onclick="toggleSearch()"></i>
+                                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/60 cursor-pointer" onclick="toggleSearch()"></i>
                             </div>
                         </form>
                     </div>
 
                     <!-- Cart -->
-                    <a href="{% url 'cart' %}" class="relative p-2 text-gray-700 hover:text-luxe-gold transition-colors">
+                    <a href="{% url 'cart' %}" class="relative p-2 text-white/80 hover:text-luxe-gold transition-colors">
                         <i data-lucide="shopping-bag" class="w-5 h-5"></i>
                         {% if cart_count > 0 %}
                         <span class="absolute -top-1 -right-1 bg-luxe-gold text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center" id="cartBadge">{{ cart_count }}</span>
@@ -206,20 +209,20 @@
                     </a>
 
                     <!-- Admin -->
-                    <a href="{% url 'admin_login' %}" class="p-2 text-gray-400 hover:text-luxe-gold transition-colors" title="Espace Admin">
+                    <a href="{% url 'admin_login' %}" class="p-2 text-white/40 hover:text-luxe-gold transition-colors" title="Espace Admin">
                         <i data-lucide="lock" class="w-4 h-4"></i>
                     </a>
                 </div>
 
                 <!-- Mobile: Cart + Hamburger -->
                 <div class="flex md:hidden items-center gap-3">
-                    <a href="{% url 'cart' %}" class="relative p-2 text-gray-700">
+                    <a href="{% url 'cart' %}" class="relative p-2 text-white/80">
                         <i data-lucide="shopping-bag" class="w-5 h-5"></i>
                         {% if cart_count > 0 %}
                         <span class="absolute -top-1 -right-1 bg-luxe-gold text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">{{ cart_count }}</span>
                         {% endif %}
                     </a>
-                    <button onclick="toggleMobileMenu()" class="p-2 text-gray-700" id="menuBtn">
+                    <button onclick="toggleMobileMenu()" class="p-2 text-white" id="menuBtn">
                         <i data-lucide="menu" class="w-6 h-6" id="menuIcon"></i>
                     </button>
                 </div>
@@ -227,22 +230,22 @@
         </div>
 
         <!-- Mobile Menu -->
-        <div class="mobile-menu md:hidden bg-white border-t border-gray-100" id="mobileMenu">
+        <div class="mobile-menu md:hidden bg-luxe-dark border-t border-white/10" id="mobileMenu">
             <div class="px-4 py-4 space-y-3">
                 <form method="GET" action="{% url 'home' %}">
                     <div class="relative">
                         <input type="text" name="q" value="{{ search_query|default:'' }}"
                             placeholder="Rechercher un produit..."
-                            class="w-full bg-gray-100 rounded-full py-3 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-luxe-gold/30">
-                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            class="w-full bg-white/10 text-white placeholder-white/50 rounded-full py-3 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-luxe-gold/30">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/50"></i>
                     </div>
                 </form>
-                <a href="{% url 'home' %}" class="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Accueil</a>
-                <a href="{% url 'home' %}?categorie=tout#collection" class="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Catalogue</a>
-                <a href="{% url 'commander_en_ligne' %}" class="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Commander</a>
-                <a href="{% url 'about' %}" class="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">À Propos</a>
-                <a href="{% url 'about' %}#contact" class="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Contact</a>
-                <a href="{% url 'admin_login' %}" class="block px-4 py-3 text-sm font-medium text-gray-400 hover:bg-gray-50 rounded-lg">
+                <a href="{% url 'home' %}" class="block px-4 py-3 text-sm font-medium text-white/80 hover:bg-white/10 rounded-lg">Accueil</a>
+                <a href="{% url 'home' %}?categorie=tout#collection" class="block px-4 py-3 text-sm font-medium text-white/80 hover:bg-white/10 rounded-lg">Catalogue</a>
+                <a href="{% url 'commander_en_ligne' %}" class="block px-4 py-3 text-sm font-medium text-white/80 hover:bg-white/10 rounded-lg">Commander</a>
+                <a href="{% url 'about' %}" class="block px-4 py-3 text-sm font-medium text-white/80 hover:bg-white/10 rounded-lg">À Propos</a>
+                <a href="{% url 'about' %}#contact" class="block px-4 py-3 text-sm font-medium text-white/80 hover:bg-white/10 rounded-lg">Contact</a>
+                <a href="{% url 'admin_login' %}" class="block px-4 py-3 text-sm font-medium text-white/40 hover:bg-white/10 rounded-lg">
                     <span class="flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4"></i> Admin</span>
                 </a>
             </div>

@@ -16,8 +16,8 @@
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
-                    <div class="flex items-center gap-3">
-                        <h1 class="font-serif text-2xl font-bold text-luxe-dark">{{ order.numero }}</h1>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <h1 class="font-serif text-xl sm:text-2xl font-bold text-luxe-dark">{{ order.numero }}</h1>
                         {% if order.vendeur %}
                         <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-gray-100 text-gray-700">
                             {{ order.vendeur.nom }}

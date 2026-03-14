@@ -4,25 +4,104 @@
 {% block title %}Africa Mindset — Marketplace multi-vendeurs{% endblock %}
 
 {% block content %}
-<!-- Hero Image -->
-<section>
-    <img src="{% static 'images/home.jpg' %}" alt="Africa Mindset" class="w-full h-auto object-cover">
-</section>
+<!-- Hero Section -->
+<section class="relative overflow-hidden bg-gradient-to-br from-luxe-darker via-luxe-dark to-luxe-navy min-h-[520px] md:min-h-[600px] flex items-center">
+    <!-- African Pattern Background -->
+    <div class="absolute inset-0 opacity-[0.06]" style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22><path d=%22M30 0L60 30L30 60L0 30Z%22 fill=%22none%22 stroke=%22white%22 stroke-width=%221.5%22/><circle cx=%2230%22 cy=%2230%22 r=%228%22 fill=%22none%22 stroke=%22white%22 stroke-width=%221%22/></svg>'); background-size: 60px 60px;"></div>
+    
+    <!-- Glowing orbs -->
+    <div class="absolute top-10 left-10 w-72 h-72 bg-luxe-teal/20 rounded-full blur-[100px]"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-luxe-gold/15 rounded-full blur-[120px]"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-luxe-navy/30 rounded-full blur-[80px]"></div>
 
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8 grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div class="lg:col-span-2">
-            <p class="text-luxe-gold text-sm uppercase tracking-[0.3em] font-semibold mb-2">Marketplace Guinée</p>
-            <h1 class="font-serif text-3xl md:text-4xl font-bold text-luxe-dark mb-3">Une boutique e-commerce multi-vendeurs pour toute la Guinée</h1>
-            <p class="text-gray-500">Les vendeurs peuvent publier leurs produits par catégorie et chaque commande reste liée au vendeur qui a publié l'article : agricole, fruits, électronique, artisanat, mode et plus.</p>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Left: Text Content -->
+            <div class="text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5 mb-6">
+                    <span class="w-2 h-2 rounded-full bg-luxe-teal animate-pulse"></span>
+                    <span class="text-xs text-white/80 font-medium tracking-wider uppercase">Marketplace Africaine</span>
+                </div>
+                
+                <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                    L'Afrique <span class="text-luxe-gold">commerce</span>,<br>
+                    l'Afrique <span class="text-luxe-teal">innove</span>.
+                </h1>
+                
+                <p class="text-lg text-white/70 max-w-lg mb-8 leading-relaxed">
+                    Connectez-vous aux vendeurs d'Afrique. Produits agricoles, artisanat, mode, électronique — commandez directement auprès des entrepreneurs locaux.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#collection" class="group inline-flex items-center justify-center gap-2 bg-luxe-gold hover:bg-luxe-gold-light text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg shadow-luxe-gold/25">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        Découvrir les produits
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <a href="{% url 'about' %}" class="inline-flex items-center justify-center gap-2 border border-white/20 hover:bg-white/10 text-white font-medium px-8 py-4 rounded-full transition-all duration-300 backdrop-blur-sm">
+                        <i data-lucide="info" class="w-5 h-5"></i>
+                        Notre histoire
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right: Visual Cards -->
+            <div class="hidden lg:block relative">
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Card 1 -->
+                    <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-6 transform hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 bg-luxe-gold/20 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="sprout" class="w-6 h-6 text-luxe-gold"></i>
+                        </div>
+                        <h3 class="text-white font-semibold mb-1">Agriculture</h3>
+                        <p class="text-white/50 text-sm">Produits frais des terres africaines</p>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-6 transform translate-y-6 hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 bg-luxe-teal/20 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="palette" class="w-6 h-6 text-luxe-teal"></i>
+                        </div>
+                        <h3 class="text-white font-semibold mb-1">Artisanat</h3>
+                        <p class="text-white/50 text-sm">Créations uniques faites main</p>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-6 transform hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="shirt" class="w-6 h-6 text-white/80"></i>
+                        </div>
+                        <h3 class="text-white font-semibold mb-1">Mode</h3>
+                        <p class="text-white/50 text-sm">Style africain contemporain</p>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-6 transform translate-y-6 hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 bg-luxe-gold/20 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="smartphone" class="w-6 h-6 text-luxe-gold"></i>
+                        </div>
+                        <h3 class="text-white font-semibold mb-1">Électronique</h3>
+                        <p class="text-white/50 text-sm">Tech accessible pour tous</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="bg-gray-50 rounded-2xl p-5">
-            <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-2">Produits actifs</p>
-            <p class="font-serif text-3xl font-bold text-luxe-dark">{{ total_products }}</p>
-        </div>
-        <div class="bg-gray-50 rounded-2xl p-5">
-            <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-2">Vendeurs disponibles</p>
-            <p class="font-serif text-3xl font-bold text-luxe-dark">{{ vendors|length }}</p>
+
+        <!-- Stats bar -->
+        <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="text-center bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl py-4 px-3">
+                <p class="font-serif text-2xl md:text-3xl font-bold text-luxe-gold">{{ total_products }}</p>
+                <p class="text-xs text-white/50 uppercase tracking-wider mt-1">Produits</p>
+            </div>
+            <div class="text-center bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl py-4 px-3">
+                <p class="font-serif text-2xl md:text-3xl font-bold text-luxe-teal">{{ vendors|length }}</p>
+                <p class="text-xs text-white/50 uppercase tracking-wider mt-1">Vendeurs</p>
+            </div>
+            <div class="text-center bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl py-4 px-3">
+                <p class="font-serif text-2xl md:text-3xl font-bold text-white">100%</p>
+                <p class="text-xs text-white/50 uppercase tracking-wider mt-1">Africain</p>
+            </div>
+            <div class="text-center bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl py-4 px-3">
+                <p class="font-serif text-2xl md:text-3xl font-bold text-luxe-gold-light">24/7</p>
+                <p class="text-xs text-white/50 uppercase tracking-wider mt-1">Disponible</p>
+            </div>
         </div>
     </div>
 </section>
@@ -31,9 +110,9 @@
 <section id="collection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
     <!-- Section Header -->
     <div class="text-center mb-12">
-        <p class="text-luxe-gold text-sm uppercase tracking-[0.3em] font-semibold mb-2">Catalogue national</p>
+        <p class="text-luxe-gold text-sm uppercase tracking-[0.3em] font-semibold mb-2">Catalogue</p>
         <h2 class="font-serif text-4xl md:text-5xl font-bold text-luxe-dark mb-4">Les produits des vendeurs d'Afrique</h2>
-        <p class="text-gray-500 max-w-2xl mx-auto">Parcourez les offres publiées par plusieurs vendeurs, filtrez par catégorie ou vendeur, puis commandez en toute simplicité.</p>
+        <p class="text-gray-500 max-w-2xl mx-auto">Parcourez les offres publiées par nos vendeurs, filtrez par catégorie ou vendeur, puis commandez en toute simplicité.</p>
     </div>
 
     <!-- Search Results Info -->
