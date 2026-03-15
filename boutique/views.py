@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.db.models import Q, Sum, Count, F
 from django.db import transaction
 from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator
 from .models import Product, Order, OrderItem, Vendor, OfflineSale
 import json
 from django.utils import timezone
@@ -93,8 +94,13 @@ def home(request):
     if type_vente and type_vente != 'tout':
         products = products.filter(type_vente=type_vente)
 
+    paginator = Paginator(products, 16)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'products': products,
+        'products': page_obj,
+        'page_obj': page_obj,
         'categorie_active': categorie,
         'search_query': search,
         'vendeur_actif': vendeur_slug,
