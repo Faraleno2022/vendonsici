@@ -69,8 +69,8 @@ class Product(models.Model):
 
     vendeur = models.ForeignKey('Vendor', on_delete=models.CASCADE, related_name='products')
     nom = models.CharField(max_length=200)
-    categorie = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
-    type_vente = models.CharField(max_length=20, choices=TYPE_VENTE_CHOICES, default='detail')
+    categorie = models.CharField(max_length=20, choices=CATEGORY_CHOICES, db_index=True)
+    type_vente = models.CharField(max_length=20, choices=TYPE_VENTE_CHOICES, default='detail', db_index=True)
     prix = models.DecimalField(max_digits=12, decimal_places=0)
     prix_achat = models.DecimalField(max_digits=12, decimal_places=0, default=0, verbose_name="Prix d'achat")
     description = models.TextField()
@@ -82,12 +82,16 @@ class Product(models.Model):
     seuil_alerte_stock = models.IntegerField(default=3, verbose_name="Seuil d'alerte stock")
     lieu_stock = models.CharField(max_length=120, default='Conakry')
     date_ajout = models.DateTimeField(auto_now_add=True)
-    actif = models.BooleanField(default=True)
+    actif = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         ordering = ['-date_ajout']
         verbose_name = 'Produit'
         verbose_name_plural = 'Produits'
+        indexes = [
+            models.Index(fields=['actif', 'categorie']),
+            models.Index(fields=['actif', '-date_ajout']),
+        ]
 
     def save(self, *args, **kwargs):
         if self.stock < 0:

@@ -58,6 +58,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.http.ConditionalGetMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'boutique.middleware.CanonicalHostMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -163,3 +165,12 @@ LOGIN_URL = '/admin-panel/login/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# --- Performance: Caching & Sessions ---
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'africa-mindset-cache',
+    }
+}
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'

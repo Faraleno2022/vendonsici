@@ -70,7 +70,11 @@ def _build_order_vendor_context(order):
 
 
 def home(request):
-    products = Product.objects.filter(actif=True).select_related('vendeur')
+    products = Product.objects.filter(actif=True).select_related('vendeur').only(
+        'id', 'nom', 'categorie', 'type_vente', 'prix', 'image', 'image_url',
+        'badge', 'note', 'lieu_stock', 'date_ajout', 'actif',
+        'vendeur__nom', 'vendeur__slug', 'vendeur__actif',
+    )
     categorie = request.GET.get('categorie', 'tout')
     search = request.GET.get('q', '')
     vendeur_slug = request.GET.get('vendeur', '')
