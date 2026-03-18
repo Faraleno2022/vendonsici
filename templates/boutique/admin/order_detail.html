@@ -18,7 +18,7 @@
                 <div>
                     <div class="flex flex-wrap items-center gap-3">
                         <h1 class="font-serif text-xl sm:text-2xl font-bold text-luxe-dark">{{ order.numero }}</h1>
-                        {% if order.vendeur %}
+                        {% if not is_vendor and order.vendeur %}
                         <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-gray-100 text-gray-700">
                             {{ order.vendeur.nom }}
                         </span>
@@ -125,7 +125,7 @@
                     <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Mode de paiement</p>
                     <p class="font-medium text-luxe-dark">{{ order.get_mode_paiement_display }}</p>
                 </div>
-                {% if order.vendeur %}
+                {% if not is_vendor and order.vendeur %}
                 <div>
                     <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Vendeur principal</p>
                     <p class="font-medium text-luxe-dark">{{ order.vendeur.nom }}</p>

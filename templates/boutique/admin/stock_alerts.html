@@ -86,7 +86,7 @@
                 <tr class="hover:bg-red-50/30">
                     <td class="px-6 py-4">
                         <p class="text-sm font-medium text-gray-800">{{ p.nom }}</p>
-                        <p class="text-xs text-gray-400">{{ p.vendeur.nom }}</p>
+                        {% if not is_vendor %}<p class="text-xs text-gray-400">{{ p.vendeur.nom }}</p>{% endif %}
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-500">{{ p.get_categorie_display }}</td>
                     <td class="px-6 py-4 text-right">
@@ -135,7 +135,7 @@
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-3">
                         <p class="text-sm font-medium text-gray-800">{{ p.nom }}</p>
-                        <p class="text-xs text-gray-400">{{ p.vendeur.nom }}</p>
+                        {% if not is_vendor %}<p class="text-xs text-gray-400">{{ p.vendeur.nom }}</p>{% endif %}
                     </td>
                     <td class="px-6 py-3 text-sm text-gray-500">{{ p.get_categorie_display }}</td>
                     <td class="px-6 py-3 text-sm text-right font-semibold text-green-600">{{ p.stock }}</td>

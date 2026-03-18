@@ -597,7 +597,7 @@ def admin_dashboard(request):
     completed_orders = orders_qs.filter(statut='terminee').count()
     total_revenue = orders_qs.filter(statut='terminee').aggregate(Sum('total'))['total__sum'] or 0
     total_products = products_qs.count()
-    total_vendors = Vendor.objects.filter(actif=True).count()
+    total_vendors = Vendor.objects.filter(actif=True).count() if not vendor else 0
     recent_orders = orders_qs.select_related('vendeur').all()[:10]
 
     context = {
@@ -610,6 +610,7 @@ def admin_dashboard(request):
         'total_products': total_products,
         'total_vendors': total_vendors,
         'recent_orders': recent_orders,
+        'is_vendor': vendor is not None,
     }
     return render(request, 'boutique/admin/dashboard.html', context)
 
@@ -642,7 +643,7 @@ def admin_orders(request):
         'orders': orders,
         'statut_filter': statut_filter,
         'vendeur_filter': vendeur_filter,
-        'vendors': _get_active_vendors(),
+        'vendors': _get_active_vendors() if not vendor else [],
         'statuts': Order.STATUS_CHOICES,
         'is_vendor': vendor is not None,
     }
@@ -661,7 +662,10 @@ def admin_order_detail(request, pk):
         messages.error(request, 'Vous n\'avez pas accès à cette commande.')
         return redirect('admin_orders')
 
-    context = {'order': order}
+    context = {
+        'order': order,
+        'is_vendor': vendor is not None,
+    }
     return render(request, 'boutique/admin/order_detail.html', context)
 
 
@@ -736,7 +740,7 @@ def admin_products(request):
         'search_query': search,
         'categorie_filter': categorie,
         'vendeur_filter': vendeur_filter,
-        'vendors': _get_active_vendors(),
+        'vendors': _get_active_vendors() if not vendor else [],
         'categories': Product.CATEGORY_CHOICES,
         'total': products.count(),
         'is_vendor': vendor is not None,
@@ -774,7 +778,7 @@ def admin_product_add(request):
             messages.error(request, 'Veuillez remplir tous les champs obligatoires.')
             return render(request, 'boutique/admin/product_form.html', {
                 'mode': 'add',
-                'vendors': _get_active_vendors(),
+                'vendors': _get_active_vendors() if not vendor else Vendor.objects.filter(pk=vendor.pk),
                 'categories': Product.CATEGORY_CHOICES,
                 'type_vente_choices': Product.TYPE_VENTE_CHOICES,
                 'badges': Product.BADGE_CHOICES,
@@ -814,7 +818,7 @@ def admin_product_add(request):
 
     context = {
         'mode': 'add',
-        'vendors': _get_active_vendors(),
+        'vendors': _get_active_vendors() if not vendor else Vendor.objects.filter(pk=vendor.pk),
         'categories': Product.CATEGORY_CHOICES,
         'type_vente_choices': Product.TYPE_VENTE_CHOICES,
         'badges': Product.BADGE_CHOICES,
@@ -838,7 +842,11 @@ def admin_product_edit(request, pk):
     if request.method == 'POST':
         vendeur_id = request.POST.get('vendeur', '')
         if vendeur_id:
-            product.vendeur = get_object_or_404(Vendor, pk=int(vendeur_id), actif=True)
+            new_vendeur = get_object_or_404(Vendor, pk=int(vendeur_id), actif=True)
+            if vendor and new_vendeur.pk != vendor.pk:
+                messages.error(request, 'Vous ne pouvez pas réassigner ce produit à un autre vendeur.')
+                return redirect('admin_products')
+            product.vendeur = new_vendeur
         product.nom = request.POST.get('nom', '').strip()
         product.categorie = request.POST.get('categorie', '')
         product.type_vente = request.POST.get('type_vente', 'detail')
@@ -869,10 +877,11 @@ def admin_product_edit(request, pk):
     context = {
         'mode': 'edit',
         'product': product,
-        'vendors': _get_active_vendors(),
+        'vendors': _get_active_vendors() if not vendor else Vendor.objects.filter(pk=vendor.pk),
         'categories': Product.CATEGORY_CHOICES,
         'type_vente_choices': Product.TYPE_VENTE_CHOICES,
         'badges': Product.BADGE_CHOICES,
+        'is_vendor': vendor is not None,
     }
     return render(request, 'boutique/admin/product_form.html', context)
 

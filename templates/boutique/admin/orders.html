@@ -23,12 +23,14 @@
             {{ label }}
         </a>
         {% endfor %}
+        {% if not is_vendor %}
         {% for vendor in vendors %}
         <a href="{% url 'admin_orders' %}?vendeur={{ vendor.slug }}"
            class="px-4 py-2 rounded-full text-sm font-medium transition-all {% if vendeur_filter == vendor.slug %}bg-luxe-gold text-white{% else %}bg-white text-gray-600 hover:bg-gray-100{% endif %}">
             {{ vendor.nom }}
         </a>
         {% endfor %}
+        {% endif %}
     </div>
 </div>
 
@@ -52,7 +54,7 @@
                 <div>
                     <div class="flex items-center gap-3 flex-wrap">
                         <span class="font-mono text-sm font-bold text-luxe-dark">{{ order.numero }}</span>
-                        {% if order.vendeur %}
+                        {% if not is_vendor and order.vendeur %}
                         <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-700">{{ order.vendeur.nom }}</span>
                         {% endif %}
                         {% if order.statut == 'nouvelle' %}
