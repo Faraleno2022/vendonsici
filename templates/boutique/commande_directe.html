@@ -10,14 +10,14 @@
     <link rel="canonical" href="{{ canonical_current_url }}">
     <meta property="og:title" content="{{ product.nom }} — Africa Mindset">
     <meta property="og:description" content="{{ product.nom }} à {{ product.prix_formate }}. Commandez maintenant !">
-    <meta property="og:image" content="{{ product.get_image_url }}">
+    <meta property="og:image" content="{% if product.image %}{{ canonical_base_url }}{{ product.image.url }}{% elif product.image_url %}{{ product.image_url }}{% else %}{{ canonical_base_url }}{% static 'images/logo.png' %}{% endif %}">
     <meta property="og:type" content="product">
     <meta property="og:url" content="{{ canonical_current_url }}">
     <meta property="og:site_name" content="Africa Mindset">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ product.nom }} — Africa Mindset">
     <meta name="twitter:description" content="{{ product.description|truncatewords:30 }}">
-    <meta name="twitter:image" content="{{ product.get_image_url }}">
+    <meta name="twitter:image" content="{% if product.image %}{{ canonical_base_url }}{{ product.image.url }}{% elif product.image_url %}{{ product.image_url }}{% else %}{{ canonical_base_url }}{% static 'images/logo.png' %}{% endif %}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
