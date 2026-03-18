@@ -18,7 +18,7 @@
     <meta property="og:description" content="{% block og_description %}Marketplace multi-vendeurs d'Afrique{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ canonical_current_url }}">
-    <meta property="og:image" content="{% block og_image %}{% static 'images/logo.png' %}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ canonical_base_url }}{% static 'images/logo.png' %}{% endblock %}">
     <meta property="og:site_name" content="Africa Mindset">
     <meta property="og:locale" content="fr_FR">
 
@@ -26,7 +26,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{% block twitter_title %}Africa Mindset{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}Marketplace multi-vendeurs d'Afrique{% endblock %}">
-    <meta name="twitter:image" content="{% block twitter_image %}{% static 'images/logo.png' %}{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ canonical_base_url }}{% static 'images/logo.png' %}{% endblock %}">
     {% block extra_head %}{% endblock %}
 
     <!-- DNS Prefetch + Preconnect -->

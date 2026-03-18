@@ -7,10 +7,10 @@
 {% block canonical_url %}{{ canonical_current_url }}{% endblock %}
 {% block og_title %}{{ product.nom }} — Africa Mindset{% endblock %}
 {% block og_description %}{{ product.description|truncatewords:30 }}{% endblock %}
-{% block og_image %}{{ product.get_image_url }}{% endblock %}
+{% block og_image %}{% if product.image %}{{ canonical_base_url }}{{ product.image.url }}{% elif product.image_url %}{{ product.image_url }}{% else %}{{ canonical_base_url }}/static/img/placeholder.jpg{% endif %}{% endblock %}
 {% block twitter_title %}{{ product.nom }} — Africa Mindset{% endblock %}
 {% block twitter_description %}{{ product.description|truncatewords:30 }}{% endblock %}
-{% block twitter_image %}{{ product.get_image_url }}{% endblock %}
+{% block twitter_image %}{% if product.image %}{{ canonical_base_url }}{{ product.image.url }}{% elif product.image_url %}{{ product.image_url }}{% else %}{{ canonical_base_url }}/static/img/placeholder.jpg{% endif %}{% endblock %}
 {% block extra_head %}
 <script type="application/ld+json">
 {
