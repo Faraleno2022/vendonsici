@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin-panel/
+Disallow: /django-admin/
+Disallow: /panier/
+Disallow: /commander/
+Disallow: /confirmation/
+Disallow: /api/
+
+Sitemap: https://www.vendonsici.com/sitemap.xml

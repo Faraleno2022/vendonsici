@@ -35,7 +35,7 @@
             {% for item in cart_items %}
             <div class="bg-white rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-6">
                 <!-- Product Image -->
-                <a href="{% url 'product_detail' item.product.pk %}" class="flex-shrink-0">
+                <a href="{% url 'product_detail' item.product.slug %}" class="flex-shrink-0">
                     <div class="w-24 h-32 bg-gray-100 rounded-xl overflow-hidden">
                         <img src="{{ item.product.get_image_url }}" alt="{{ item.product.nom }}" class="w-full h-full object-cover">
                     </div>
@@ -44,7 +44,7 @@
                 <!-- Product Info -->
                 <div class="flex-1 min-w-0">
                     <p class="text-xs text-luxe-gold uppercase tracking-wider font-semibold">{{ item.product.get_categorie_display }}</p>
-                    <a href="{% url 'product_detail' item.product.pk %}">
+                    <a href="{% url 'product_detail' item.product.slug %}">
                         <h3 class="font-serif text-lg font-bold text-luxe-dark hover:text-luxe-gold transition-colors">{{ item.product.nom }}</h3>
                     </a>
                     <p class="text-sm text-gray-500 mt-1">Vendeur : {{ item.product.vendeur.nom }} · {{ item.product.get_type_vente_display }}</p>

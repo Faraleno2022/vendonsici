@@ -117,18 +117,24 @@ def home(request):
     return render(request, 'boutique/home.html', context)
 
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product.objects.select_related('vendeur'), pk=pk, actif=True)
+def product_detail(request, slug):
+    product = get_object_or_404(Product.objects.select_related('vendeur'), slug=slug, actif=True)
 
     if request.GET.get('fbclid'):
         return redirect('commande_directe', pk=product.pk)
 
-    related = Product.objects.filter(categorie=product.categorie, actif=True).select_related('vendeur').exclude(pk=pk)[:4]
+    related = Product.objects.filter(categorie=product.categorie, actif=True).select_related('vendeur').exclude(pk=product.pk)[:4]
     context = {
         'product': product,
         'related_products': related,
     }
     return render(request, 'boutique/product_detail.html', context)
+
+
+def product_detail_by_pk(request, pk):
+    """Redirection 301 pour les anciens liens /produit/<pk>/"""
+    product = get_object_or_404(Product, pk=pk, actif=True)
+    return redirect('product_detail', slug=product.slug, permanent=True)
 
 
 def about(request):

@@ -1,7 +1,16 @@
 ﻿{% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Africa Mindset — Marketplace multi-vendeurs{% endblock %}
+{% block title %}Africa Mindset — Marketplace multi-vendeurs de Guinée{% endblock %}
+{% block meta_description %}Découvrez {{ total_products }} produits locaux sur Africa Mindset : agricole, fruits, électronique, artisanat, mode et services. Achetez directement auprès des vendeurs guinéens à Conakry.{% endblock %}
+{% block og_title %}Africa Mindset — Marketplace multi-vendeurs de Guinée{% endblock %}
+{% block og_description %}{{ total_products }} produits locaux disponibles : agricole, fruits, électronique, artisanat, mode. Achetez directement chez les vendeurs guinéens.{% endblock %}
+{% block twitter_title %}Africa Mindset — Marketplace multi-vendeurs de Guinée{% endblock %}
+{% block twitter_description %}{{ total_products }} produits locaux : agricole, électronique, artisanat, mode. Achetez chez les vendeurs guinéens.{% endblock %}
+{% block extra_head %}
+{% if page_obj.has_previous %}<link rel="prev" href="?page={{ page_obj.previous_page_number }}">{% endif %}
+{% if page_obj.has_next %}<link rel="next" href="?page={{ page_obj.next_page_number }}">{% endif %}
+{% endblock %}
 
 {% block content %}
 <!-- Search & Filter Section -->
@@ -70,7 +79,7 @@
         <div class="cascade-item product-card bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group"
              style="animation-delay: 0s;">
             <!-- Product Image -->
-            <a href="{% url 'product_detail' product.pk %}" class="block relative overflow-hidden" style="aspect-ratio: 4/3;">
+            <a href="{% url 'product_detail' product.slug %}" class="block relative overflow-hidden" style="aspect-ratio: 4/3;">
                 <img src="{{ product.get_image_url }}" alt="{{ product.nom }}"
                      class="w-full h-full object-cover transition-transform duration-700"
                      loading="lazy">
@@ -98,7 +107,7 @@
                     <button type="button"
                             data-share-name="{{ product.nom|escapejs }}"
                             data-share-price="{{ product.prix_formate|escapejs }}"
-                            data-url="{% url 'product_detail' product.pk %}"
+                            data-url="{% url 'product_detail' product.slug %}"
                             class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-luxe-dark hover:bg-green-500 hover:text-white transition-all transform hover:scale-110"
                             title="Partager sur WhatsApp">
                         <i data-lucide="message-circle" class="w-5 h-5"></i>
@@ -115,7 +124,7 @@
             <!-- Product Info -->
             <div class="p-5">
                 <p class="text-xs text-luxe-gold uppercase tracking-wider font-semibold mb-1">{{ product.get_categorie_display }}</p>
-                <a href="{% url 'product_detail' product.pk %}">
+                <a href="{% url 'product_detail' product.slug %}">
                     <h3 class="font-serif text-lg font-bold text-luxe-dark mb-2 group-hover:text-luxe-gold transition-colors line-clamp-1">{{ product.nom }}</h3>
                 </a>
                 <p class="text-sm text-gray-500 mb-2">Vendu par {{ product.vendeur.nom }}</p>

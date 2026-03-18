@@ -1,7 +1,37 @@
 ﻿{% extends 'base.html' %}
 {% load static %}
 
-{% block title %}À Propos — Africa Mindset{% endblock %}
+{% block title %}À Propos — Africa Mindset | Marketplace guinéenne{% endblock %}
+{% block meta_description %}Africa Mindset est la marketplace multi-vendeurs de Guinée. Découvrez notre histoire, nos valeurs et notre mission : connecter vendeurs et acheteurs locaux à Conakry.{% endblock %}
+{% block og_title %}À Propos — Africa Mindset | Marketplace guinéenne{% endblock %}
+{% block og_description %}Africa Mindset connecte les vendeurs guinéens à une clientèle locale. Produits agricoles, fruits, électronique, artisanat, mode et services à Conakry.{% endblock %}
+{% block twitter_title %}À Propos — Africa Mindset{% endblock %}
+{% block twitter_description %}La marketplace multi-vendeurs de Guinée. Achetez local, soutenez les commerçants guinéens.{% endblock %}
+{% block extra_head %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Africa Mindset",
+    "url": "https://www.vendonsici.com",
+    "logo": "https://www.vendonsici.com{% static 'images/logo.png' %}",
+    "description": "Marketplace multi-vendeurs de Guinée pour produits agricoles, fruits, électronique, artisanat, mode et services.",
+    "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Conakry",
+        "addressCountry": "GN"
+    },
+    "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+224-622-61-35-59",
+        "contactType": "customer service",
+        "email": "faraleno16@gmail.com",
+        "availableLanguage": "French"
+    },
+    "sameAs": []
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <!-- Hero -->

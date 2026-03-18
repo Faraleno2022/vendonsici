@@ -81,6 +81,7 @@ class Product(models.Model):
     stock = models.IntegerField(default=10)
     seuil_alerte_stock = models.IntegerField(default=3, verbose_name="Seuil d'alerte stock")
     lieu_stock = models.CharField(max_length=120, default='Conakry')
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     date_ajout = models.DateTimeField(auto_now_add=True)
     actif = models.BooleanField(default=True, db_index=True)
 
@@ -94,6 +95,14 @@ class Product(models.Model):
         ]
 
     def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.nom) or f'produit-{uuid.uuid4().hex[:6]}'
+            slug = base_slug
+            compteur = 1
+            while Product.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                compteur += 1
+                slug = f'{base_slug}-{compteur}'
+            self.slug = slug
         if self.stock < 0:
             self.stock = 0
         if self.note < 1:
@@ -103,6 +112,10 @@ class Product(models.Model):
         if not self.lieu_stock:
             self.lieu_stock = 'Conakry'
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('product_detail', kwargs={'slug': self.slug})
 
     def __str__(self):
         return f"{self.nom} — {self.vendeur.nom}"
