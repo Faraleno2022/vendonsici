@@ -21,10 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hte0@4$#+kp@5am!4$hmo71^sjt)2gk9)rw#h+94+9%=k8^h+3'
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'Mua-yI17DFYWPYtez9Be4Vu7tInDf43inV2QNX19iKcx3x1_zN2vWrA2heflI8XkFsU'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     'vendonsici.com',
@@ -42,6 +45,20 @@ CSRF_TRUSTED_ORIGINS = [
 
 CANONICAL_SCHEME = 'https'
 CANONICAL_DOMAIN = 'www.vendonsici.com'
+
+# --- Sécurité production (PythonAnywhere gère SSL via proxy) ---
+# PythonAnywhere termine SSL au niveau proxy — ne pas rediriger ici
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_HSTS_SECONDS = 31536000       # 1 an
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+# W008 supprimé : PythonAnywhere gère la redirection HTTPS au niveau proxy
+SILENCED_SYSTEM_CHECKS = ['security.W008']
 
 
 # Application definition
