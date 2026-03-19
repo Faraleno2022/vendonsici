@@ -112,7 +112,12 @@ WSGI_APPLICATION = 'guineemakiti.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-if os.environ.get('PYTHONANYWHERE'):
+_ON_PYTHONANYWHERE = (
+    os.environ.get('PYTHONANYWHERE')
+    or Path('/home/vendonsici').exists()
+)
+
+if _ON_PYTHONANYWHERE:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
