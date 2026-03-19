@@ -127,6 +127,16 @@ class Product(models.Model):
             return self.image_url
         return '/static/img/placeholder.jpg'
 
+    def get_absolute_image_url(self):
+        """URL absolue de l'image, pour les balises og:image / twitter:image."""
+        from django.conf import settings
+        base = f"{getattr(settings, 'CANONICAL_SCHEME', 'https')}://{getattr(settings, 'CANONICAL_DOMAIN', 'www.vendonsici.com')}"
+        if self.image and hasattr(self.image, 'url'):
+            return f"{base}{self.image.url}"
+        if self.image_url:
+            return self.image_url
+        return f"{base}/static/images/logo.png"
+
     @property
     def prix_formate(self):
         return f"{self.prix:,.0f} GNF".replace(",", " ")
