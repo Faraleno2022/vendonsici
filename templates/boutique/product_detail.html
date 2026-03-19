@@ -81,7 +81,8 @@
         <div class="relative">
             <div class="bg-gray-100 rounded-3xl overflow-hidden" style="aspect-ratio: 3/4;">
                 <img src="{{ product.get_image_url }}" alt="{{ product.nom }}"
-                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                     decoding="async" fetchpriority="high" width="600" height="800">
             </div>
             {% if product.badge %}
             <span class="absolute top-6 left-6 px-4 py-2 rounded-full text-white text-sm font-semibold badge-{{ product.badge|lower }} shadow-lg">
@@ -214,7 +215,7 @@
             {% for p in related_products %}
             <a href="{% url 'product_detail' p.slug %}" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group">
                 <div class="relative overflow-hidden" style="aspect-ratio: 3/4;">
-                    <img src="{{ p.get_image_url }}" alt="{{ p.nom }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                    <img src="{{ p.get_image_url }}" alt="{{ p.nom }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" width="300" height="400">
                     <span class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold shadow-sm {% if p.type_vente == 'grossiste' %}bg-luxe-dark text-white{% else %}bg-white/95 text-luxe-dark border border-gray-200{% endif %}">
                         {{ p.get_type_vente_display }}
                     </span>

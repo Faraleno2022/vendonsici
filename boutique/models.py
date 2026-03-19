@@ -1,7 +1,10 @@
 from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 import uuid
+import sys
 
 
 class Vendor(models.Model):
@@ -111,7 +114,30 @@ class Product(models.Model):
             self.note = 5
         if not self.lieu_stock:
             self.lieu_stock = 'Conakry'
+        if self.image and hasattr(self.image, 'file'):
+            self._compress_image()
         super().save(*args, **kwargs)
+
+    def _compress_image(self, max_size=1200, quality=80):
+        """Redimensionne et compresse l'image uploadée en JPEG."""
+        try:
+            from PIL import Image as PILImage
+            img = PILImage.open(self.image)
+            if img.mode in ('RGBA', 'P'):
+                img = img.convert('RGB')
+            w, h = img.size
+            if w > max_size or h > max_size:
+                img.thumbnail((max_size, max_size), PILImage.LANCZOS)
+            buffer = BytesIO()
+            img.save(buffer, format='JPEG', quality=quality, optimize=True)
+            buffer.seek(0)
+            name = self.image.name.rsplit('.', 1)[0] + '.jpg'
+            self.image = InMemoryUploadedFile(
+                buffer, 'ImageField', name, 'image/jpeg',
+                sys.getsizeof(buffer), None
+            )
+        except Exception:
+            pass
 
     def get_absolute_url(self):
         from django.urls import reverse

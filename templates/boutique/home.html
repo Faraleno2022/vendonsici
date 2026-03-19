@@ -82,7 +82,7 @@
             <a href="{% url 'product_detail' product.slug %}" class="block relative overflow-hidden" style="aspect-ratio: 4/3;">
                 <img src="{{ product.get_image_url }}" alt="{{ product.nom }}"
                      class="w-full h-full object-cover transition-transform duration-700"
-                     loading="lazy">
+                     loading="lazy" decoding="async" width="400" height="300">
 
                 <!-- Badge -->
                 {% if product.badge %}

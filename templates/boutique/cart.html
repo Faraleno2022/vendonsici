@@ -37,7 +37,7 @@
                 <!-- Product Image -->
                 <a href="{% url 'product_detail' item.product.slug %}" class="flex-shrink-0">
                     <div class="w-24 h-32 bg-gray-100 rounded-xl overflow-hidden">
-                        <img src="{{ item.product.get_image_url }}" alt="{{ item.product.nom }}" class="w-full h-full object-cover">
+                        <img src="{{ item.product.get_image_url }}" alt="{{ item.product.nom }}" class="w-full h-full object-cover" loading="lazy" decoding="async">
                     </div>
                 </a>
 

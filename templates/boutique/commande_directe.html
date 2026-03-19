@@ -86,7 +86,7 @@
                 <div class="flex flex-col sm:flex-row">
                     <!-- Image -->
                     <div class="sm:w-48 h-56 sm:h-auto flex-shrink-0 bg-gray-100">
-                        <img src="{{ product.get_image_url }}" alt="{{ product.nom }}" class="w-full h-full object-cover">
+                        <img src="{{ product.get_image_url }}" alt="{{ product.nom }}" class="w-full h-full object-cover" decoding="async">
                     </div>
                     <!-- Info -->
                     <div class="flex-1 p-5">
@@ -113,7 +113,7 @@
 
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 border-b border-gray-100">
                     <div class="flex items-center gap-3">
-                        <img src="{{ product.get_image_url }}" alt="{{ product.nom }}" class="w-12 h-12 rounded-lg object-cover">
+                        <img src="{{ product.get_image_url }}" alt="{{ product.nom }}" class="w-12 h-12 rounded-lg object-cover" loading="lazy" decoding="async">
                         <div>
                             <p class="text-sm font-medium text-luxe-dark">{{ product.nom }}</p>
                             <p class="text-xs text-gray-400">{{ product.get_type_vente_display }} · {{ product.prix_formate }} / unité</p>

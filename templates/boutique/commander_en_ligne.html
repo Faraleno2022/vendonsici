@@ -143,7 +143,7 @@
                      data-product-name="{{ product.nom|escapejs }}"
                      data-product-price="{{ product.prix }}">
                     <div class="relative h-40 sm:h-48 bg-gray-100 overflow-hidden">
-                        <img src="{{ product.get_image_url }}" alt="{{ product.nom }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <img src="{{ product.get_image_url }}" alt="{{ product.nom }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async">
                         {% if product.badge %}
                         <span class="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-luxe-gold text-white">{{ product.badge }}</span>
                         {% endif %}

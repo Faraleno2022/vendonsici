@@ -47,7 +47,7 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group">
         <!-- Image -->
         <div class="relative h-48 bg-gray-100 overflow-hidden">
-            <img src="{{ product.get_image_url }}" alt="{{ product.nom }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <img src="{{ product.get_image_url }}" alt="{{ product.nom }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async">
             {% if product.badge %}
             <span class="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full bg-luxe-gold text-white">{{ product.badge }}</span>
             {% endif %}

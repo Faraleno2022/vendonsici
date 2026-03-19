@@ -75,7 +75,7 @@
                 <div class="p-6 flex items-center gap-4">
                     {% if item.product %}
                     <div class="w-16 h-20 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0">
-                        <img src="{{ item.product.get_image_url }}" alt="{{ item.nom_produit }}" class="w-full h-full object-cover">
+                        <img src="{{ item.product.get_image_url }}" alt="{{ item.nom_produit }}" class="w-full h-full object-cover" loading="lazy" decoding="async">
                     </div>
                     {% else %}
                     <div class="w-16 h-20 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
