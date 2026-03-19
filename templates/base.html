@@ -19,6 +19,9 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ canonical_current_url }}">
     <meta property="og:image" content="{% block og_image %}{{ canonical_base_url }}{% static 'images/logo.png' %}{% endblock %}">
+    <meta property="og:image:type" content="{% block og_image_type %}image/png{% endblock %}">
+    <meta property="og:image:width" content="{% block og_image_width %}512{% endblock %}">
+    <meta property="og:image:height" content="{% block og_image_height %}512{% endblock %}">
     <meta property="og:site_name" content="Africa Mindset">
     <meta property="og:locale" content="fr_FR">
 

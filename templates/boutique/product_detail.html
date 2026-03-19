@@ -8,6 +8,9 @@
 {% block og_title %}{{ product.nom }} — Africa Mindset{% endblock %}
 {% block og_description %}{{ product.description|truncatewords:30 }}{% endblock %}
 {% block og_image %}{{ product.get_absolute_image_url }}{% endblock %}
+{% block og_image_type %}image/jpeg{% endblock %}
+{% block og_image_width %}1200{% endblock %}
+{% block og_image_height %}1200{% endblock %}
 {% block twitter_title %}{{ product.nom }} — Africa Mindset{% endblock %}
 {% block twitter_description %}{{ product.description|truncatewords:30 }}{% endblock %}
 {% block twitter_image %}{{ product.get_absolute_image_url }}{% endblock %}
