@@ -156,11 +156,21 @@ class Product(models.Model):
     def get_absolute_image_url(self):
         """URL absolue de l'image, pour les balises og:image / twitter:image."""
         from django.conf import settings
-        base = f"{getattr(settings, 'CANONICAL_SCHEME', 'https')}://{getattr(settings, 'CANONICAL_DOMAIN', 'www.vendonsici.com')}"
+        base = f"https://{getattr(settings, 'CANONICAL_DOMAIN', 'www.vendonsici.com')}"
         if self.image and hasattr(self.image, 'url'):
-            return f"{base}{self.image.url}"
+            img_url = self.image.url
+            if img_url.startswith('/'):
+                return f"{base}{img_url}"
+            return img_url
         if self.image_url:
-            return self.image_url
+            url = self.image_url.strip()
+            # Convertir http en https pour Facebook
+            if url.startswith('http://'):
+                url = 'https://' + url[7:]
+            # Ajouter le domaine si chemin relatif
+            if url.startswith('/'):
+                return f"{base}{url}"
+            return url
         return f"{base}/static/images/logo.png"
 
     @property
