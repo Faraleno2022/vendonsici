@@ -98,7 +98,7 @@ def home(request):
     if type_vente and type_vente != 'tout':
         products = products.filter(type_vente=type_vente)
 
-    paginator = Paginator(products, 16)
+    paginator = Paginator(products, 50)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
