@@ -16,9 +16,10 @@
     <!-- Open Graph Tags -->
     <meta property="og:title" content="{% block og_title %}Africa Mindset{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Marketplace multi-vendeurs d'Afrique{% endblock %}">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:url" content="{{ canonical_current_url }}">
     <meta property="og:image" content="{% block og_image %}{{ canonical_base_url }}{% static 'images/logo.png' %}{% endblock %}">
+    <meta property="og:image:secure_url" content="{% block og_image_secure %}{{ canonical_base_url }}{% static 'images/logo.png' %}{% endblock %}">
     <meta property="og:image:type" content="{% block og_image_type %}image/png{% endblock %}">
     <meta property="og:image:width" content="{% block og_image_width %}512{% endblock %}">
     <meta property="og:image:height" content="{% block og_image_height %}512{% endblock %}">
