@@ -120,7 +120,7 @@ def home(request):
 def product_detail(request, slug):
     product = get_object_or_404(Product.objects.select_related('vendeur'), slug=slug, actif=True)
 
-    if request.GET.get('fbclid'):
+    if request.GET.get('fbclid') and 'facebookexternalhit' not in request.META.get('HTTP_USER_AGENT', '').lower():
         return redirect('commande_directe', pk=product.pk)
 
     related = Product.objects.filter(categorie=product.categorie, actif=True).select_related('vendeur').exclude(pk=product.pk)[:4]
