@@ -118,26 +118,29 @@ class Product(models.Model):
             self._compress_image()
         super().save(*args, **kwargs)
 
-    def _compress_image(self, max_size=1200, quality=80):
-        """Redimensionne et compresse l'image uploadée en JPEG."""
+    def _compress_image(self, max_size=1200, quality=85):
+        """Redimensionne et compresse l'image uploadée en JPEG (compatible Facebook/Twitter)."""
         try:
-            from PIL import Image as PILImage
-            img = PILImage.open(self.image)
-            if img.mode in ('RGBA', 'P'):
-                img = img.convert('RGB')
-            w, h = img.size
-            if w > max_size or h > max_size:
-                img.thumbnail((max_size, max_size), PILImage.LANCZOS)
-            buffer = BytesIO()
-            img.save(buffer, format='JPEG', quality=quality, optimize=True)
-            buffer.seek(0)
-            name = self.image.name.rsplit('.', 1)[0] + '.jpg'
-            self.image = InMemoryUploadedFile(
-                buffer, 'ImageField', name, 'image/jpeg',
-                sys.getsizeof(buffer), None
-            )
-        except Exception:
+            import pillow_avif  # noqa: F401  (active le décodage AVIF dans Pillow)
+        except ImportError:
             pass
+        from PIL import Image as PILImage
+        img = PILImage.open(self.image)
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
+        w, h = img.size
+        if w > max_size or h > max_size:
+            img.thumbnail((max_size, max_size), PILImage.LANCZOS)
+        buffer = BytesIO()
+        img.save(buffer, format='JPEG', quality=quality, optimize=True)
+        buffer.seek(0)
+        original = self.image.name.rsplit('/', 1)[-1]
+        stem = original.rsplit('.', 1)[0] if '.' in original else original
+        name = f"{stem}.jpg"
+        self.image = InMemoryUploadedFile(
+            buffer, 'ImageField', name, 'image/jpeg',
+            sys.getsizeof(buffer), None
+        )
 
     def get_absolute_url(self):
         from django.urls import reverse
