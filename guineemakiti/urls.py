@@ -15,6 +15,7 @@ urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
+    path("google10babad53f3eade7.html", TemplateView.as_view(template_name="google10babad53f3eade7.html", content_type="text/html")),
     path("", include("boutique.urls")),
 ]
 
