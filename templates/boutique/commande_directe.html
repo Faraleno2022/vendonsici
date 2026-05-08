@@ -11,6 +11,10 @@
     <meta property="og:title" content="{{ product.nom }} — Africa Mindset">
     <meta property="og:description" content="{{ product.nom }} à {{ product.prix_formate }}. Commandez maintenant !">
     <meta property="og:image" content="{{ product.get_absolute_image_url }}">
+    <meta property="og:image:secure_url" content="{{ product.get_absolute_image_url }}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="1200">
     <meta property="og:type" content="product">
     <meta property="og:url" content="{{ canonical_current_url }}">
     <meta property="og:site_name" content="Africa Mindset">

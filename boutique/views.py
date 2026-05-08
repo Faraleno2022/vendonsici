@@ -1,5 +1,8 @@
+from io import BytesIO
+
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -136,6 +139,62 @@ def product_detail_by_pk(request, pk):
     """Redirection 301 pour les anciens liens /produit/<pk>/"""
     product = get_object_or_404(Product, pk=pk, actif=True)
     return redirect('product_detail', slug=product.slug, permanent=True)
+
+
+def _absolute_public_url(url):
+    url = (url or '').strip()
+    if url.startswith('http://'):
+        return 'https://' + url[7:]
+    if url.startswith('/'):
+        base = f"{getattr(settings, 'CANONICAL_SCHEME', 'https')}://{getattr(settings, 'CANONICAL_DOMAIN', 'www.vendonsici.com')}"
+        return f"{base}{url}"
+    return url
+
+
+def _jpeg_response_from_image_file(image_file):
+    from PIL import Image as PILImage, ImageOps
+
+    if hasattr(image_file, 'open'):
+        image_file.open('rb')
+    try:
+        img = PILImage.open(image_file)
+        img = ImageOps.exif_transpose(img)
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
+
+        canvas_size = 1200
+        img.thumbnail((canvas_size, canvas_size), PILImage.LANCZOS)
+        canvas = PILImage.new('RGB', (canvas_size, canvas_size), (255, 255, 255))
+        left = (canvas_size - img.width) // 2
+        top = (canvas_size - img.height) // 2
+        canvas.paste(img, (left, top))
+
+        buffer = BytesIO()
+        canvas.save(buffer, format='JPEG', quality=90, optimize=True, progressive=True)
+        return HttpResponse(
+            buffer.getvalue(),
+            content_type='image/jpeg',
+            headers={'Cache-Control': 'public, max-age=604800'},
+        )
+    finally:
+        if hasattr(image_file, 'close'):
+            image_file.close()
+
+
+def product_og_image(request, slug):
+    product = get_object_or_404(Product.objects.only('slug', 'actif', 'image', 'image_url'), slug=slug, actif=True)
+
+    if product.image:
+        try:
+            return _jpeg_response_from_image_file(product.image)
+        except Exception:
+            pass
+
+    if product.image_url:
+        return HttpResponseRedirect(_absolute_public_url(product.image_url))
+
+    logo_path = settings.BASE_DIR / 'static' / 'images' / 'logo.png'
+    return _jpeg_response_from_image_file(open(logo_path, 'rb'))
 
 
 def about(request):

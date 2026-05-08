@@ -159,12 +159,10 @@ class Product(models.Model):
     def get_absolute_image_url(self):
         """URL absolue de l'image, pour les balises og:image / twitter:image."""
         from django.conf import settings
+        from django.urls import reverse
         base = f"https://{getattr(settings, 'CANONICAL_DOMAIN', 'www.vendonsici.com')}"
         if self.image and hasattr(self.image, 'url'):
-            img_url = self.image.url
-            if img_url.startswith('/'):
-                return f"{base}{img_url}"
-            return img_url
+            return f"{base}{reverse('product_og_image', kwargs={'slug': self.slug})}"
         if self.image_url:
             url = self.image_url.strip()
             # Convertir http en https pour Facebook
