@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.files import File
 from django.core.management.base import BaseCommand
 
-from boutique.models import Product
+from boutique.models import Product, Vendor
 
 
 class Command(BaseCommand):
@@ -136,12 +136,25 @@ class Command(BaseCommand):
         ]
 
         images_dir = os.path.join(settings.MEDIA_ROOT, 'produits')
+        vendor, _ = Vendor.objects.get_or_create(
+            slug='vendeur-principal',
+            defaults={
+                'nom': 'Vendeur principal',
+                'telephone': '',
+                'email': None,
+                'adresse': '',
+                'ville': 'Conakry',
+                'description': 'Vendeur principal de la boutique.',
+                'actif': True,
+            },
+        )
         created_count = 0
         updated_count = 0
 
         for data in products_data:
             image_filename = data.pop('image_file')
             image_path = os.path.join(images_dir, image_filename)
+            data['vendeur'] = vendor
 
             product, created = Product.objects.get_or_create(
                 nom=data['nom'],
