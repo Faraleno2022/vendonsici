@@ -17,9 +17,6 @@ class ProductOpenGraphTests(TestCase):
             description='Un produit parfait pour tester le partage Facebook.',
             stock=5,
         )
-        Product.objects.filter(pk=self.product.pk).update(image='produits/produit-test.jpg')
-        self.product.refresh_from_db()
-
     def test_product_og_image_uses_facebook_image_endpoint(self):
         expected_url = f"https://www.vendonsici.com{reverse('product_og_image', kwargs={'slug': self.product.slug})}"
 

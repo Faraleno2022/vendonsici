@@ -161,18 +161,7 @@ class Product(models.Model):
         from django.conf import settings
         from django.urls import reverse
         base = f"https://{getattr(settings, 'CANONICAL_DOMAIN', 'www.vendonsici.com')}"
-        if self.image and hasattr(self.image, 'url'):
-            return f"{base}{reverse('product_og_image', kwargs={'slug': self.slug})}"
-        if self.image_url:
-            url = self.image_url.strip()
-            # Convertir http en https pour Facebook
-            if url.startswith('http://'):
-                url = 'https://' + url[7:]
-            # Ajouter le domaine si chemin relatif
-            if url.startswith('/'):
-                return f"{base}{url}"
-            return url
-        return f"{base}/static/images/logo.png"
+        return f"{base}{reverse('product_og_image', kwargs={'slug': self.slug})}"
 
     @property
     def prix_formate(self):

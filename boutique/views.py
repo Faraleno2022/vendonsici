@@ -1,4 +1,5 @@
 from io import BytesIO
+from urllib.request import Request, urlopen
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
@@ -181,6 +182,19 @@ def _jpeg_response_from_image_file(image_file):
             image_file.close()
 
 
+def _jpeg_response_from_public_url(url):
+    absolute_url = _absolute_public_url(url)
+    if not absolute_url:
+        raise ValueError('Image URL is empty')
+
+    request = Request(
+        absolute_url,
+        headers={'User-Agent': 'facebookexternalhit/1.1 (+https://www.facebook.com/externalhit_uatext.php)'},
+    )
+    with urlopen(request, timeout=10) as response:
+        return _jpeg_response_from_image_file(BytesIO(response.read(8 * 1024 * 1024)))
+
+
 def product_og_image(request, slug):
     product = get_object_or_404(Product.objects.only('slug', 'actif', 'image', 'image_url'), slug=slug, actif=True)
 
@@ -191,7 +205,10 @@ def product_og_image(request, slug):
             pass
 
     if product.image_url:
-        return HttpResponseRedirect(_absolute_public_url(product.image_url))
+        try:
+            return _jpeg_response_from_public_url(product.image_url)
+        except Exception:
+            pass
 
     logo_path = settings.BASE_DIR / 'static' / 'images' / 'logo.png'
     return _jpeg_response_from_image_file(open(logo_path, 'rb'))
